@@ -16,12 +16,14 @@ import java.util.List;
 
 public class BasicItemController {
     private final ItemRepository itemRepository;
+
     @GetMapping
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
         return "basic/items";
     }
+
     //상품 상세
     @GetMapping("/{itemId}")
     public String item(@PathVariable Long itemId, Model model) {
@@ -90,8 +92,14 @@ public class BasicItemController {
         return "redirect:/basic/items/{itemId}";
     }
 
-    /**
-     * 테스트용 데이터 추가 */
+    //PRG - Post/Redirect/Get
+    @PostMapping("/add")
+    public String addItemV5(Item item) {
+        itemRepository.save(item);
+        return "redirect:/basic/items/" + item.getId();
+    }
+
+    //테스트용 데이터 추가
     @PostConstruct
     public void init() {
         itemRepository.save(new Item("testA", 10000, 10));
